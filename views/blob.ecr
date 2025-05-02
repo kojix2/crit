@@ -1,17 +1,191 @@
 <div class="repo-blob">
-  <h2><%= name %>: <%= path %></h2>
-  <p>Branch: <%= ref %></p>
-  
-  <div class="file-content">
-    <% if is_binary %>
-      <p>Binary file not displayed</p>
-    <% else %>
-      <pre><code><%= HTML.escape(content) %></code></pre>
-    <% end %>
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="/repo/<%= name %>" class="breadcrumb-item">
+        <span class="repo-icon">📁</span>
+        <%= name %>
+      </a>
+      
+      <% 
+        # Build breadcrumb path segments
+        segments = [] of {name: String, path: String}
+        current_path = ""
+        
+        path_parts = path.split("/")
+        file_name = path_parts.pop
+        
+        path_parts.each do |part|
+          current_path = current_path.empty? ? part : "#{current_path}/#{part}"
+          segments << {name: part, path: current_path}
+        end
+      %>
+      
+      <% segments.each do |segment| %>
+        <span class="breadcrumb-separator">/</span>
+        <a href="/repo/<%= name %>/tree/<%= ref %>/<%= segment[:path] %>" class="breadcrumb-item">
+          <%= segment[:name] %>
+        </a>
+      <% end %>
+      
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-item current"><%= file_name %></span>
+    </div>
+    
+    <div class="actions">
+      <a href="/repo/<%= name %>/tree/<%= ref %>/<%= parent_path %>" class="button">Back to directory</a>
+    </div>
   </div>
   
-  <div class="actions">
-    <a href="/repo/<%= name %>/tree/<%= ref %>/<%= parent_path %>" class="button">Back to directory</a>
-    <a href="/repo/<%= name %>" class="button">Back to repository</a>
+  <div class="branch-info">
+    <span class="current-branch">
+      <span class="branch-icon">🔖</span>
+      <%= ref %>
+    </span>
+  </div>
+  
+  <div class="repo-card">
+    <div class="file-header">
+      <div class="file-info">
+        <span class="file-icon"><%= is_binary ? "📦" : "📄" %></span>
+        <span class="file-name"><%= file_name %></span>
+      </div>
+    </div>
+    
+    <div class="file-content">
+      <% if is_binary %>
+        <div class="binary-file-notice">
+          <div class="binary-icon">📦</div>
+          <h3>Binary File</h3>
+          <p>This file cannot be displayed in the browser.</p>
+        </div>
+      <% else %>
+        <% 
+          # Determine file type for syntax highlighting
+          extension = File.extname(path).downcase
+          language = case extension
+            when ".cr"     then "crystal"
+            when ".rb"     then "ruby"
+            when ".js"     then "javascript"
+            when ".ts"     then "typescript"
+            when ".html"   then "html"
+            when ".css"    then "css"
+            when ".json"   then "json"
+            when ".md"     then "markdown"
+            when ".yml", ".yaml" then "yaml"
+            when ".sh"     then "bash"
+            when ".py"     then "python"
+            when ".go"     then "go"
+            when ".rs"     then "rust"
+            when ".java"   then "java"
+            when ".c", ".h" then "c"
+            when ".cpp", ".hpp" then "cpp"
+            else "plaintext"
+          end
+        %>
+        <pre class="code-block <%= language %>"><code><%= HTML.escape(content) %></code></pre>
+      <% end %>
+    </div>
   </div>
 </div>
+
+<style>
+  .repo-blob {
+    margin-bottom: 40px;
+  }
+  
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .breadcrumb-item.current {
+    color: var(--text-color);
+    font-weight: 600;
+  }
+  
+  .breadcrumb-separator {
+    margin: 0 8px;
+    color: var(--text-muted);
+  }
+  
+  .branch-info {
+    margin-bottom: 20px;
+  }
+  
+  .current-branch {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--surface-color);
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .branch-icon, .file-icon, .repo-icon {
+    margin-right: 8px;
+  }
+  
+  .file-header {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  
+  .file-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .file-name {
+    font-weight: 600;
+  }
+  
+  .file-content {
+    overflow: auto;
+  }
+  
+  .code-block {
+    margin: 0;
+    padding: 16px;
+    overflow: auto;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    tab-size: 4;
+    background-color: var(--surface-color);
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+  
+  .binary-file-notice {
+    padding: 40px;
+    text-align: center;
+    background-color: var(--surface-color);
+  }
+  
+  .binary-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+  
+  .binary-file-notice h3 {
+    margin-bottom: 10px;
+  }
+  
+  .binary-file-notice p {
+    color: var(--text-muted);
+  }
+</style>

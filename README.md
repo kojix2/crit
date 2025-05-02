@@ -1,27 +1,148 @@
-# gcirt
+# GCIRT - Git Repository Hosting Server
 
-TODO: Write a description here
+GCIRT is a lightweight Git repository hosting server built with Crystal. It provides a simple, fast, and modern web interface for managing Git repositories.
 
-## Installation
+## Features
 
-TODO: Write installation instructions here
+- **Repository Management**: Create, browse, and manage Git repositories
+- **Web Interface**: Modern, responsive UI for repository browsing
+- **File Viewer**: View repository files with syntax highlighting
+- **Branch Support**: Browse different branches of repositories
+- **Lightweight**: Minimal dependencies, fast performance
 
-## Usage
+## Architecture
 
-TODO: Write usage instructions here
+GCIRT follows a clean, modular architecture:
 
-## Development
+```
+src/
+├── models/       # Data models
+├── services/     # Business logic
+├── routes/       # HTTP routing
+├── helpers/      # Utility functions
+└── gcirt.cr      # Application entry point
 
-TODO: Write development instructions here
+views/            # ECR templates
+├── layout.ecr    # Main layout template
+├── index.ecr     # Repository list
+└── ...           # Other view templates
 
-## Contributing
+spec/             # Test files
+```
 
-1. Fork it (<https://github.com/your-github-user/gcirt/fork>)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+## Technical Highlights
 
-## Contributors
+### Clean Architecture
 
-- [kojix2](https://github.com/your-github-user) - creator and maintainer
+The application follows a clean architecture pattern with clear separation of concerns:
+
+- **Models**: Handle data representation and basic operations
+- **Services**: Implement business logic and interact with Git
+- **Routes**: Define HTTP endpoints and handle requests
+- **Views**: Present data to users with ECR templates
+
+### Security
+
+- Input validation to prevent command injection
+- Path traversal protection
+- Error handling with detailed logging
+
+### Testing
+
+Comprehensive test suite with:
+- Unit tests for models and services
+- Integration tests for routes
+- Test coverage for both normal and edge cases
+
+### UI/UX
+
+- Modern, responsive design
+- Intuitive navigation with breadcrumbs
+- Consistent styling across all pages
+- Mobile-friendly layout
+
+## Development Decisions
+
+### Why Crystal?
+
+Crystal was chosen for this project because:
+1. **Performance**: Near C-like performance with Ruby-like syntax
+2. **Type Safety**: Static type checking prevents many runtime errors
+3. **Concurrency**: Fiber-based concurrency model for handling multiple requests
+4. **Syntax**: Clean, expressive syntax that enhances readability
+
+### Git Integration
+
+Rather than using a Git library, GCIRT interacts directly with Git commands for:
+1. **Simplicity**: Direct Git command execution is straightforward
+2. **Compatibility**: Works with any Git version installed on the system
+3. **Flexibility**: Easy to extend with additional Git features
+
+## Getting Started
+
+### Prerequisites
+
+- Crystal (>= 1.0.0)
+- Git
+
+### Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/gcirt.git
+   cd gcirt
+   ```
+
+2. Install dependencies:
+   ```
+   shards install
+   ```
+
+3. Build the application:
+   ```
+   crystal build src/gcirt.cr
+   ```
+
+4. Run the server:
+   ```
+   ./gcirt
+   ```
+
+5. Visit `http://localhost:3000` in your browser
+
+### Configuration
+
+Configuration options are available in `config/config.cr`:
+
+- `REPO_ROOT`: Directory where repositories are stored
+- `PORT`: HTTP server port (default: 3000)
+
+## Future Improvements
+
+- User authentication and authorization
+- Repository access control
+- Webhook support for repository events
+- Pull/merge request functionality
+- Syntax highlighting improvements
+- Search functionality
+
+## For Hiring Managers
+
+This project demonstrates several key skills:
+
+- **Clean Code**: Well-organized, readable, and maintainable code
+- **Architecture Design**: Clear separation of concerns and modular design
+- **Testing**: Comprehensive test coverage for reliability
+- **UI/UX**: Modern, responsive, and user-friendly interface
+- **Security**: Input validation and error handling
+- **Documentation**: Clear and comprehensive documentation
+
+The codebase showcases my approach to software development with a focus on:
+- Writing clean, maintainable code
+- Building intuitive user interfaces
+- Ensuring security and reliability
+- Following best practices for web development
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

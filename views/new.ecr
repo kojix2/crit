@@ -1,16 +1,111 @@
-<div class="new-repo">
-  <h2>New Repository</h2>
+<div class="form-container">
+  <div class="page-header">
+    <h2>Create New Repository</h2>
+  </div>
   
-  <form action="/new" method="post">
-    <div class="form-group">
-      <label for="name">Repository Name:</label>
-      <input type="text" id="name" name="name" placeholder="repository name" required>
-      <small>Only alphanumeric characters, hyphens, and underscores are allowed.</small>
-    </div>
+  <div class="form-card">
+    <form action="/new" method="post">
+      <div class="form-group">
+        <label for="name">Repository Name</label>
+        <input type="text" id="name" name="name" placeholder="e.g. my-project" required autofocus>
+        <div class="form-hint">
+          Use only letters, numbers, hyphens, and underscores. No spaces or special characters.
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <a href="/" class="button">Cancel</a>
+        <button type="submit" class="button primary">Create New Repository</button>
+      </div>
+    </form>
+  </div>
+  
+  <div class="help-section">
+    <h3>Getting Started</h3>
+    <p>After creating your repository, you can clone it with:</p>
+    <pre><code>git clone http://your-server/repo/your-repo-name.git</code></pre>
     
-    <div class="form-actions">
-      <button type="submit" class="button">Create</button>
-      <a href="/" class="button button-secondary">Cancel</a>
-    </div>
-  </form>
+    <h3>Creating Your First Commit</h3>
+    <p>For a new repository, you can create your first commit with:</p>
+    <pre><code>git clone http://your-server/repo/your-repo-name.git
+cd your-repo-name
+echo "# Your Repository Name" > README.md
+git add README.md
+git commit -m "Initial commit"
+git push -u origin master</code></pre>
+    
+    <h3>Pushing to Your Repository</h3>
+    <p>If you have an existing local repository:</p>
+    <pre><code>cd your-local-repo
+git remote add origin http://your-server/repo/your-repo-name.git
+git push -u origin master</code></pre>
+  </div>
 </div>
+
+<style>
+  .form-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .form-card {
+    background-color: var(--surface-color);
+    border-radius: var(--radius);
+    padding: 30px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 30px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 16px;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+  
+  .form-hint {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 30px;
+  }
+  
+  .help-section {
+    background-color: var(--surface-color);
+    border-radius: var(--radius);
+    padding: 30px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .help-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+  
+  .help-section pre {
+    margin: 15px 0 25px;
+  }
+</style>

@@ -1,6 +1,7 @@
 require "../spec_helper"
 
 describe Gcirt::Models::Repository do
+  # Test setup and teardown
   before_each do
     # Set up a test repository directory
     ENV["GCIRT_REPO_ROOT"] = "./test_repos"
@@ -13,20 +14,53 @@ describe Gcirt::Models::Repository do
     FileUtils.rm_rf(Gcirt::Config::REPO_ROOT) if Dir.exists?(Gcirt::Config::REPO_ROOT)
   end
 
+  # Test initialization and validation
   describe "#initialize" do
-    it "creates a repository instance with a name" do
+    it "creates a repository instance with a valid name" do
       repo = Gcirt::Models::Repository.new("test")
       repo.name.should eq("test")
     end
+
+    it "raises ArgumentError for empty name" do
+      expect_raises(ArgumentError, "Repository name cannot be empty") do
+        Gcirt::Models::Repository.new("")
+      end
+    end
+
+    it "raises ArgumentError for name with invalid characters" do
+      expect_raises(ArgumentError, "Repository name contains invalid characters") do
+        Gcirt::Models::Repository.new("test/repo")
+      end
+    end
+
+    it "raises ArgumentError for name exceeding maximum length" do
+      long_name = "a" * (Gcirt::Models::Repository::MAX_NAME_LENGTH + 1)
+      expect_raises(ArgumentError, "Repository name cannot exceed") do
+        Gcirt::Models::Repository.new(long_name)
+      end
+    end
+
+    it "raises ArgumentError for reserved names" do
+      expect_raises(ArgumentError, "Repository name 'admin' is reserved") do
+        Gcirt::Models::Repository.new("admin")
+      end
+    end
   end
 
+  # Test path generation
   describe "#path" do
     it "returns the correct repository path" do
       repo = Gcirt::Models::Repository.new("test")
       repo.path.should eq(File.join(Gcirt::Config::REPO_ROOT, "test.git"))
     end
+
+    it "handles repository names with .git extension" do
+      repo = Gcirt::Models::Repository.new("test.git")
+      repo.path.should eq(File.join(Gcirt::Config::REPO_ROOT, "test.git"))
+    end
   end
 
+  # Test existence checking
   describe "#exists?" do
     it "returns false for non-existent repository" do
       repo = Gcirt::Models::Repository.new("test")
@@ -40,6 +74,7 @@ describe Gcirt::Models::Repository do
     end
   end
 
+  # Test repository creation
   describe "#create" do
     it "creates a new repository" do
       repo = Gcirt::Models::Repository.new("test")
@@ -54,8 +89,23 @@ describe Gcirt::Models::Repository do
       result = repo.create
       result.should be_false
     end
+
+    it "creates a repository with a hyphenated name" do
+      repo = Gcirt::Models::Repository.new("test-repo")
+      result = repo.create
+      result.should be_true
+      Dir.exists?(repo.path).should be_true
+    end
+
+    it "creates a repository with an underscore in the name" do
+      repo = Gcirt::Models::Repository.new("test_repo")
+      result = repo.create
+      result.should be_true
+      Dir.exists?(repo.path).should be_true
+    end
   end
 
+  # Test repository listing
   describe ".list" do
     it "returns empty array when no repositories exist" do
       Gcirt::Models::Repository.list.should eq([] of String)
@@ -66,11 +116,38 @@ describe Gcirt::Models::Repository do
       repo2 = Gcirt::Models::Repository.new("test2")
       repo1.create
       repo2.create
-      
+
       list = Gcirt::Models::Repository.list
       list.size.should eq(2)
       list.should contain("test1.git")
       list.should contain("test2.git")
+    end
+
+    it "returns sorted list of repositories" do
+      repo1 = Gcirt::Models::Repository.new("c-repo")
+      repo2 = Gcirt::Models::Repository.new("a-repo")
+      repo3 = Gcirt::Models::Repository.new("b-repo")
+      repo1.create
+      repo2.create
+      repo3.create
+
+      list = Gcirt::Models::Repository.list
+      list.should eq(["a-repo.git", "b-repo.git", "c-repo.git"])
+    end
+  end
+  # Test repository directory creation
+  describe ".ensure_repo_dir" do
+    it "creates the repository directory if it doesn't exist" do
+      FileUtils.rm_rf(Gcirt::Config::REPO_ROOT)
+      result = Gcirt::Models::Repository.ensure_repo_dir
+      result.should be_true
+      Dir.exists?(Gcirt::Config::REPO_ROOT).should be_true
+    end
+
+    it "returns true if the repository directory already exists" do
+      # Directory is already created in before_each
+      result = Gcirt::Models::Repository.ensure_repo_dir
+      result.should be_true
     end
   end
 end

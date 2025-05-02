@@ -1,17 +1,35 @@
 <div class="repo-list">
-  <div class="actions">
-    <a href="/new" class="button">New Repository</a>
+  <div class="page-header">
+    <h2>Repositories</h2>
+    <div class="actions">
+      <a href="/new" class="button primary">
+        <i class="icon-plus"></i> Create New Repository
+      </a>
+    </div>
   </div>
   
-  <h2>Repositories</h2>
-  
   <% if repos.empty? %>
-    <p>No repositories found.</p>
+    <div class="empty-state">
+      <div class="empty-state-icon">📁</div>
+      <h3>No repositories found</h3>
+      <p>Create your first Git repository to get started.</p>
+      <a href="/new" class="button primary">Create New Repository</a>
+    </div>
   <% else %>
-    <ul>
+    <div class="repo-grid">
       <% repos.each do |repo| %>
-        <li><a href="/repo/<%= repo %>"><%= repo %></a></li>
+        <div class="repo-card">
+          <div class="repo-icon">📁</div>
+          <div class="repo-details">
+            <h3 class="repo-name">
+              <a href="/repo/<%= repo.sub(/\.git$/, "") %>"><%= repo.sub(/\.git$/, "") %></a>
+            </h3>
+            <div class="repo-meta">
+              <span class="repo-type">Git Repository</span>
+            </div>
+          </div>
+        </div>
       <% end %>
-    </ul>
+    </div>
   <% end %>
 </div>
