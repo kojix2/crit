@@ -17,7 +17,7 @@ module Crit
       # @param base_path [String] The base directory path
       # @param file_name [String] The file name to append
       # @return [String] The combined path
-      private def self.file_path(base_path, file_name)
+      def self.file_path(base_path, file_name)
         base_path.empty? ? file_name : "#{base_path}/#{file_name}"
       end
 
@@ -159,6 +159,9 @@ module Crit
             parent_path = path.empty? ? "" : File.dirname(path)
             parent_path = "" if parent_path == "."
 
+            # Get branches for branch switcher
+            branches = Crit::Services::RepoService.list_branches(name)
+
             render "views/tree.ecr", "views/layout.ecr"
           rescue ex
             Log.error { "Error rendering directory contents: #{ex.message}" }
@@ -194,6 +197,9 @@ module Crit
             # Calculate parent directory path
             parent_path = File.dirname(path)
             parent_path = "" if parent_path == "."
+
+            # Get branches for branch switcher
+            branches = Crit::Services::RepoService.list_branches(name)
 
             render "views/blob.ecr", "views/layout.ecr"
           rescue ex

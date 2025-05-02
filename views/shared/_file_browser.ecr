@@ -54,10 +54,21 @@
   </div>
   
   <div class="branch-info">
-    <span class="current-branch">
-      <span class="branch-icon">🔖</span>
-      <%= branch_ref %>
-    </span>
+    <div class="branch-dropdown">
+      <button class="current-branch" onclick="toggleBranchMenu()">
+        <span class="branch-icon">🔖</span>
+        <%= branch_ref %>
+        <span class="dropdown-arrow">▼</span>
+      </button>
+      <div id="branch-menu" class="branch-menu">
+        <% branches.each do |branch| %>
+          <a href="/repo/<%= name %><%= path && !path.empty? ? "/tree/#{branch}/#{path}" : "" %>" class="branch-item <%= branch == branch_ref ? "active" : "" %>">
+            <span class="branch-icon">🔖</span>
+            <%= branch %>
+          </a>
+        <% end %>
+      </div>
+    </div>
   </div>
   
   <div class="repo-card">
@@ -155,6 +166,11 @@
     margin-bottom: 20px;
   }
   
+  .branch-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
   .current-branch {
     display: inline-flex;
     align-items: center;
@@ -163,6 +179,51 @@
     border-radius: var(--radius);
     font-size: 14px;
     border: 1px solid var(--border-color);
+    cursor: pointer;
+  }
+  
+  .current-branch:hover {
+    background-color: var(--border-color);
+  }
+  
+  .dropdown-arrow {
+    margin-left: 8px;
+    font-size: 10px;
+  }
+  
+  .branch-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    min-width: 200px;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 4px;
+  }
+  
+  .branch-menu.show {
+    display: block;
+  }
+  
+  .branch-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: var(--text-color);
+  }
+  
+  .branch-item:hover {
+    background-color: var(--border-color);
+  }
+  
+  .branch-item.active {
+    font-weight: 600;
+    background-color: rgba(0, 0, 0, 0.03);
   }
   
   .branch-icon, .file-icon, .repo-icon {
@@ -209,3 +270,18 @@
     color: var(--text-muted);
   }
 </style>
+
+<script>
+  function toggleBranchMenu() {
+    const menu = document.getElementById('branch-menu');
+    menu.classList.toggle('show');
+    
+    // Close the menu when clicking outside
+    document.addEventListener('click', function closeMenu(e) {
+      if (!e.target.closest('.branch-dropdown')) {
+        menu.classList.remove('show');
+        document.removeEventListener('click', closeMenu);
+      }
+    });
+  }
+</script>
