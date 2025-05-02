@@ -13,6 +13,7 @@ describe Crit do
     it "initializes repository directory on startup" do
       # This test relies on the fact that spec_helper requires crit,
       # which calls Crit::Models::Repository.ensure_repo_dir
+      Crit::Models::Repository.ensure_repo_dir
       Dir.exists?(Crit::Config::REPO_ROOT).should be_true
     end
   end

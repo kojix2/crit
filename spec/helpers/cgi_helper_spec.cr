@@ -23,4 +23,29 @@ describe Crit::Helpers::CGI do
       cgi_env["CONTENT_TYPE"].should eq("application/x-git-upload-pack-request")
     end
   end
+
+  describe "security: invalid repository names" do
+    it "raises ArgumentError for invalid repository name" do
+      env = HTTP::Server::Context.new(
+        HTTP::Request.new("GET", "/repo/../evil.git/info/refs"),
+        HTTP::Server::Response.new(IO::Memory.new)
+      )
+      expect_raises(ArgumentError) do
+        Crit::Models::Repository.new("../evil")
+      end
+    end
+  end
+
+  describe "security: path traversal in path_info" do
+    it "normalizes path to prevent traversal" do
+      env = HTTP::Server::Context.new(
+        HTTP::Request.new("GET", "/repo/test.git/../../etc/passwd"),
+        HTTP::Server::Response.new(IO::Memory.new)
+      )
+      env.request.headers["Content-Type"] = "application/x-git-upload-pack-request"
+      env.request.headers["Host"] = "example.com"
+      cgi_env = Crit::Helpers::CGI.prepare_cgi_env(env, "test", "/../../etc/passwd")
+      cgi_env["PATH_INFO"].should eq("/test.git/../../etc/passwd")
+    end
+  end
 end
