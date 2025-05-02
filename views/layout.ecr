@@ -10,12 +10,35 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.13.0/highlightjs-line-numbers.min.js"></script>
   <style>
+    /* highlight.js line numbers styles */
+    .hljs-ln {
+      border-collapse: collapse;
+    }
+    .hljs-ln td {
+      padding: 0;
+      border: none;
+    }
+    .hljs-ln-n:before {
+      content: attr(data-line-number);
+    }
+    .hljs-ln-numbers {
+      user-select: none;
+      text-align: right;
+      color: var(--text-muted);
+      border-right: 1px solid var(--border-color);
+      vertical-align: top;
+      padding-right: 8px !important;
+      padding-left: 8px !important;
+    }
+    .hljs-ln-code {
+      padding-left: 8px !important;
+    }
     :root {
       --primary-color: #2563eb;
       --primary-hover: #1d4ed8;
       --secondary-color: #64748b;
       --background-color: #ffffff;
-      --surface-color: #f8fafc;
+      --surface-color: #ffffff;
       --border-color: #e2e8f0;
       --text-color: #1e293b;
       --text-muted: #64748b;
