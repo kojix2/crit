@@ -1,53 +1,20 @@
 <div class="repo-detail">
   <div class="page-header">
-    <h2><%= name %></h2>
-    <div class="actions">
-      <a href="/" class="button">Back to repositories</a>
+    <div class="breadcrumb">
+      <a href="/repo/<%= name %>" class="breadcrumb-item">
+        <span class="repo-icon">📁</span>
+        <%= name %>
+      </a>
     </div>
   </div>
-  
-  <div class="repo-cards">
-    <div class="repo-card">
-      <h3>Clone Repository</h3>
-      <div class="clone-info">
-        <div class="clone-url-container">
-          <label for="clone-url">HTTPS Clone URL</label>
-          <div class="copy-field">
-            <input id="clone-url" type="text" readonly value="http://<%= env.request.headers["Host"]? || "localhost:3000" %>/repo/<%= name %>.git">
-            <button class="copy-button" onclick="copyToClipboard('clone-url')" title="Copy to clipboard">
-              Copy
-            </button>
-          </div>
-        </div>
-        
-        <div class="clone-command">
-          <label>Git Command</label>
-          <pre><code>git clone http://<%= env.request.headers["Host"]? || "localhost:3000" %>/repo/<%= name %>.git</code></pre>
-        </div>
-      </div>
-    </div>
-    
-    <div class="repo-card">
-      <h3>Branches</h3>
-      <% if branches.empty? %>
-        <div class="empty-state small">
-          <p>No branches found. Push to this repository to create branches.</p>
-        </div>
-      <% else %>
-        <div class="branch-list">
-          <% branches.each do |branch| %>
-            <div class="branch-item">
-              <a href="/repo/<%= name %>/tree/<%= branch %>">
-                <span class="branch-icon">🔖</span>
-                <span class="branch-name"><%= branch %></span>
-              </a>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
+
+  <div class="branch-info">
+    <span class="current-branch">
+      <span class="branch-icon">🔖</span>
+      <%= default_branch %>
+    </span>
   </div>
-  
+
   <div class="repo-card files-card">
     <div class="files-header">
       <h3>Files</h3>
