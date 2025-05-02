@@ -1,0 +1,16 @@
+<div class="new-repo">
+  <h2>New Repository</h2>
+  
+  <form action="/new" method="post">
+    <div class="form-group">
+      <label for="name">Repository Name:</label>
+      <input type="text" id="name" name="name" placeholder="repository name" required>
+      <small>Only alphanumeric characters, hyphens, and underscores are allowed.</small>
+    </div>
+    
+    <div class="form-actions">
+      <button type="submit" class="button">Create</button>
+      <a href="/" class="button button-secondary">Cancel</a>
+    </div>
+  </form>
+</div>

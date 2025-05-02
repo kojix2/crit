@@ -1,0 +1,46 @@
+<div class="repo-tree">
+  <h2><%= name %>: <%= path.empty? ? "/" : path %></h2>
+  <p>Branch: <%= ref %></p>
+  
+  <div class="repo-files">
+    <% if files.nil? || files.empty? %>
+      <p>No files found.</p>
+    <% else %>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% unless path.empty? %>
+            <tr>
+              <td>
+                <a href="/repo/<%= name %>/tree/<%= ref %>/<%= parent_path %>">..</a>
+              </td>
+              <td>Directory</td>
+            </tr>
+          <% end %>
+          
+          <% files.each do |file| %>
+            <tr>
+              <td>
+                <% if file[:type] == "tree" %>
+                  <a href="/repo/<%= name %>/tree/<%= ref %>/<%= file_path(path, file[:name]) %>"><%= file[:name] %>/</a>
+                <% else %>
+                  <a href="/repo/<%= name %>/blob/<%= ref %>/<%= file_path(path, file[:name]) %>"><%= file[:name] %></a>
+                <% end %>
+              </td>
+              <td><%= file[:type] == "tree" ? "Directory" : "File" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+  
+  <div class="actions">
+    <a href="/repo/<%= name %>" class="button">Back to repository</a>
+  </div>
+</div>

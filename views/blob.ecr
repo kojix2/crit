@@ -1,0 +1,17 @@
+<div class="repo-blob">
+  <h2><%= name %>: <%= path %></h2>
+  <p>Branch: <%= ref %></p>
+  
+  <div class="file-content">
+    <% if is_binary %>
+      <p>Binary file not displayed</p>
+    <% else %>
+      <pre><code><%= HTML.escape(content) %></code></pre>
+    <% end %>
+  </div>
+  
+  <div class="actions">
+    <a href="/repo/<%= name %>/tree/<%= ref %>/<%= parent_path %>" class="button">Back to directory</a>
+    <a href="/repo/<%= name %>" class="button">Back to repository</a>
+  </div>
+</div>

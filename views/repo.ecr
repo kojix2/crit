@@ -1,0 +1,54 @@
+<div class="repo-detail">
+  <h2>Repository: <%= name %></h2>
+  
+  <div class="repo-info">
+    <p>Clone URL (local): <code><%= `hostname`.strip %>:<%= File.expand_path(repo.path) %></code></p>
+  </div>
+  
+  <div class="repo-branches">
+    <h3>Branches</h3>
+    <% if branches.empty? %>
+      <p>No branches found.</p>
+    <% else %>
+      <ul>
+        <% branches.each do |branch| %>
+          <li><a href="/repo/<%= name %>/tree/<%= branch %>"><%= branch %></a></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+  
+  <div class="repo-files">
+    <h3>Files</h3>
+    <% if files.nil? || files.empty? %>
+      <p>No files found.</p>
+    <% else %>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% files.each do |file| %>
+            <tr>
+              <td>
+                <% if file[:type] == "tree" %>
+                  <a href="/repo/<%= name %>/tree/<%= default_branch %>/<%= file[:name] %>"><%= file[:name] %>/</a>
+                <% else %>
+                  <a href="/repo/<%= name %>/blob/<%= default_branch %>/<%= file[:name] %>"><%= file[:name] %></a>
+                <% end %>
+              </td>
+              <td><%= file[:type] == "tree" ? "Directory" : "File" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+  
+  <div class="actions">
+    <a href="/" class="button">Back to repositories</a>
+  </div>
+</div>

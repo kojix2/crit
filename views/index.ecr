@@ -1,0 +1,17 @@
+<div class="repo-list">
+  <div class="actions">
+    <a href="/new" class="button">New Repository</a>
+  </div>
+  
+  <h2>Repositories</h2>
+  
+  <% if repos.empty? %>
+    <p>No repositories found.</p>
+  <% else %>
+    <ul>
+      <% repos.each do |repo| %>
+        <li><a href="/repo/<%= repo %>"><%= repo %></a></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
