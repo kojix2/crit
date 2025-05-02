@@ -1,0 +1,19 @@
+name: crit
+version: 0.1.0
+
+authors:
+  - kojix2 <2xijok@gmail.com>
+
+targets:
+  crit:
+    main: src/crit.cr
+
+crystal: '>= 1.15.1'
+
+dependencies:
+  kemal-basic-auth:
+    github: kemalcr/kemal-basic-auth
+  kemal:
+    github: kemalcr/kemal
+
+license: MIT
