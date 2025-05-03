@@ -62,7 +62,7 @@
       </button>
       <div id="branch-menu" class="branch-menu">
         <% branches.each do |branch| %>
-          <a href="/repo/<%= name %><%= path && !path.empty? ? "/tree/#{branch}/#{path}" : "" %>" class="branch-item <%= branch == branch_ref ? "active" : "" %>">
+          <a href="/repo/<%= name %>/tree/<%= branch %><%= path && !path.empty? ? "/#{path}" : "" %>" class="branch-item <%= branch == branch_ref ? "active" : "" %>">
             <span class="branch-icon">🔖</span>
             <%= branch %>
           </a>
