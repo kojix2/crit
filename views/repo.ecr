@@ -1,0 +1,27 @@
+<% if branches.empty? %>
+  <div class="repo-tree">
+    <div class="page-header">
+      <div class="breadcrumb">
+        <a href="/repo/<%= name %>" class="breadcrumb-item">
+          <span class="repo-icon">📁</span>
+          <%= name %>
+        </a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-item current">Empty Repository</span>
+      </div>
+      <div class="actions">
+        <a href="/" class="button">Back to repositories</a>
+      </div>
+    </div>
+    
+    <%= render "views/empty_repo.ecr" %>
+  </div>
+<% else %>
+  <% 
+    # Set variables for the shared file browser
+    branch_ref = default_branch
+    path = ""
+    parent_path = nil
+  %>
+  <%= render "views/shared/_file_browser.ecr" %>
+<% end %>

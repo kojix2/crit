@@ -1,0 +1,28 @@
+# Version control
+.git
+.github
+
+# Documentation
+*.md
+LICENSE
+
+# Development and test files
+spec/
+.env
+.env.*
+
+# Editor files
+.vscode
+.idea
+
+# Build artifacts
+bin/
+lib/
+.shards/
+
+# Logs
+*.log
+
+# OS specific files
+.DS_Store
+Thumbs.db

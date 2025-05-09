@@ -1,0 +1,287 @@
+<div class="repo-tree">
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="/repo/<%= name %>" class="breadcrumb-item">
+        <span class="repo-icon">📁</span>
+        <%= name %>
+      </a>
+      
+      <% if path && !path.empty? %>
+        <% 
+          # Build breadcrumb path segments for tree view
+          segments = [] of {name: String, path: String}
+          current_path = ""
+          
+          unless path.empty?
+            path_parts = path.split("/")
+            
+            path_parts.each do |part|
+              current_path = current_path.empty? ? part : "#{current_path}/#{part}"
+              segments << {name: part, path: current_path}
+            end
+          end
+        %>
+        
+        <% if segments.empty? %>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-item current">root</span>
+        <% else %>
+          <% segments.each_with_index do |segment, index| %>
+            <span class="breadcrumb-separator">/</span>
+            <% if index == segments.size - 1 %>
+              <span class="breadcrumb-item current"><%= segment[:name] %></span>
+            <% else %>
+              <a href="/repo/<%= name %>/tree/<%= branch_ref %>/<%= segment[:path] %>" class="breadcrumb-item">
+                <%= segment[:name] %>
+              </a>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% else %>
+        <!-- Simple root breadcrumb for repo view -->
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-item current">root</span>
+      <% end %>
+    </div>
+    
+    <div class="actions">
+      <% if path && !path.empty? %>
+        <a href="/repo/<%= name %>" class="button">Back to repository</a>
+      <% else %>
+        <a href="/" class="button">Back to repositories</a>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="branch-info">
+    <div class="branch-dropdown">
+      <button class="current-branch" onclick="toggleBranchMenu()">
+        <span class="branch-icon">🔖</span>
+        <%= branch_ref %>
+        <span class="dropdown-arrow">▼</span>
+      </button>
+      <div id="branch-menu" class="branch-menu">
+        <% branches.each do |branch| %>
+          <a href="/repo/<%= name %>/tree/<%= branch %><%= path && !path.empty? ? "/#{path}" : "" %>" class="branch-item <%= branch == branch_ref ? "active" : "" %>">
+            <span class="branch-icon">🔖</span>
+            <%= branch %>
+          </a>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="repo-card">
+    <% if files.nil? || files.empty? %>
+      <div class="empty-state small">
+        <p>This directory is empty.</p>
+      </div>
+    <% else %>
+      <table class="files-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if path && !path.empty? && parent_path %>
+            <tr>
+              <td class="file-name">
+                <a href="/repo/<%= name %>/tree/<%= branch_ref %>/<%= parent_path %>">
+                  <span class="file-icon">📁</span>
+                  ..
+                </a>
+              </td>
+              <td class="file-type">Directory</td>
+            </tr>
+          <% end %>
+          
+          <% 
+            # Sort files: directories first, then files, both alphabetically
+            directories = files.select { |file| file[:type] == "tree" }
+                              .sort_by { |file| file[:name].downcase }
+            regular_files = files.select { |file| file[:type] != "tree" }
+                               .sort_by { |file| file[:name].downcase }
+            sorted_files = directories + regular_files
+          %>
+          
+          <% sorted_files.each do |file| %>
+            <tr>
+              <td class="file-name">
+                <% if file[:type] == "tree" %>
+                  <a href="/repo/<%= name %>/tree/<%= branch_ref %>/<%= path && !path.empty? ? file_path(path, file[:name]) : file[:name] %>">
+                    <span class="file-icon">📁</span>
+                    <%= file[:name] %>/
+                  </a>
+                <% else %>
+                  <a href="/repo/<%= name %>/blob/<%= branch_ref %>/<%= path && !path.empty? ? file_path(path, file[:name]) : file[:name] %>">
+                    <span class="file-icon">📄</span>
+                    <%= file[:name] %>
+                  </a>
+                <% end %>
+              </td>
+              <td class="file-type"><%= file[:type] == "tree" ? "Directory" : "File" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .repo-tree {
+    margin-bottom: 40px;
+  }
+  
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .breadcrumb-item.current {
+    color: var(--text-color);
+    font-weight: 600;
+  }
+  
+  .breadcrumb-separator {
+    margin: 0 8px;
+    color: var(--text-muted);
+  }
+  
+  .branch-info {
+    margin-bottom: 20px;
+  }
+  
+  .branch-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .current-branch {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--surface-color);
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+  }
+  
+  .current-branch:hover {
+    background-color: var(--border-color);
+  }
+  
+  .dropdown-arrow {
+    margin-left: 8px;
+    font-size: 10px;
+  }
+  
+  .branch-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    min-width: 200px;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 4px;
+  }
+  
+  .branch-menu.show {
+    display: block;
+  }
+  
+  .branch-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: var(--text-color);
+  }
+  
+  .branch-item:hover {
+    background-color: var(--border-color);
+  }
+  
+  .branch-item.active {
+    font-weight: 600;
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+  
+  .branch-icon, .file-icon, .repo-icon {
+    margin-right: 8px;
+  }
+  
+  .files-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .files-table th, .files-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .files-table th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+  
+  .file-name {
+    width: 70%;
+  }
+  
+  .file-name a {
+    display: flex;
+    align-items: center;
+  }
+  
+  .file-type {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+  
+  .empty-state.small {
+    padding: 20px;
+    text-align: center;
+    background-color: var(--surface-color);
+    border-radius: var(--radius);
+    border: 1px dashed var(--border-color);
+    color: var(--text-muted);
+  }
+</style>
+
+<script>
+  function toggleBranchMenu() {
+    const menu = document.getElementById('branch-menu');
+    menu.classList.toggle('show');
+    
+    // Close the menu when clicking outside
+    document.addEventListener('click', function closeMenu(e) {
+      if (!e.target.closest('.branch-dropdown')) {
+        menu.classList.remove('show');
+        document.removeEventListener('click', closeMenu);
+      }
+    });
+  }
+</script>
