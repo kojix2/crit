@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Crystal Docs 1.15.1">
+<meta name="crystal_docs.project_version" content="main">
+<meta name="crystal_docs.project_name" content="crit">
+
+
+
+<link href="../../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../js/doc.js"></script>
+
+  <meta name="repository-name" content="crit">
+  <title>Crit::Helpers::CGI - crit main</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill="currentColor" fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<input type="checkbox" id="sidebar-btn">
+<label for="sidebar-btn" id="sidebar-btn-label">
+  <svg class="open" xmlns="http://www.w3.org/2000/svg" height="2em" width="2em" viewBox="0 0 512 512"><title>Open Sidebar</title><path fill="currentColor" d="M80 96v64h352V96H80zm0 112v64h352v-64H80zm0 112v64h352v-64H80z"></path></svg>
+  <svg class="close" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512"><title>Close Sidebar</title><path fill="currentColor" d="m118.6 73.4-45.2 45.2L210.7 256 73.4 393.4l45.2 45.2L256 301.3l137.4 137.3 45.2-45.2L301.3 256l137.3-137.4-45.2-45.2L256 210.7Z"></path></svg>
+</label>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../../index.html">
+          crit
+        </a>
+      </h1>
+
+      <span class="project-version">
+        main
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="crit/Crit" data-name="crit">
+      <a href="../../Crit.html">Crit</a>
+      
+        <ul>
+  
+  <li class="parent open current" data-id="crit/Crit/Helpers" data-name="crit::helpers">
+      <a href="../../Crit/Helpers.html">Helpers</a>
+      
+        <ul>
+  
+  <li class=" " data-id="crit/Crit/Helpers/Auth" data-name="crit::helpers::auth">
+      <a href="../../Crit/Helpers/Auth.html">Auth</a>
+      
+    </li>
+  
+  <li class=" current" data-id="crit/Crit/Helpers/CGI" data-name="crit::helpers::cgi">
+      <a href="../../Crit/Helpers/CGI.html">CGI</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="crit/Crit/Models" data-name="crit::models">
+      <a href="../../Crit/Models.html">Models</a>
+      
+        <ul>
+  
+  <li class=" " data-id="crit/Crit/Models/Repository" data-name="crit::models::repository">
+      <a href="../../Crit/Models/Repository.html">Repository</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="crit/Crit/Routes" data-name="crit::routes">
+      <a href="../../Crit/Routes.html">Routes</a>
+      
+        <ul>
+  
+  <li class=" " data-id="crit/Crit/Routes/Git" data-name="crit::routes::git">
+      <a href="../../Crit/Routes/Git.html">Git</a>
+      
+    </li>
+  
+  <li class=" " data-id="crit/Crit/Routes/Web" data-name="crit::routes::web">
+      <a href="../../Crit/Routes/Web.html">Web</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="crit/Crit/Services" data-name="crit::services">
+      <a href="../../Crit/Services.html">Services</a>
+      
+        <ul>
+  
+  <li class=" " data-id="crit/Crit/Services/RepoService" data-name="crit::services::reposervice">
+      <a href="../../Crit/Services/RepoService.html">RepoService</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">
+    module
+  </span> Crit::<wbr>Helpers::<wbr>CGI
+
+</h1>
+
+
+
+
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>CGI helper module for git-http-backend integration</p>
+<p>This module provides functionality to handle Git HTTP protocol
+by interfacing with git-http-backend CGI script.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      <a href="https://github.com/kojix2/crit/blob/781e844b6a84a308ae262b97d61f5cb99188df87/src/helpers/cgi_helper.cr#L12" target="_blank">
+        helpers/cgi_helper.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+  
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Constant Summary
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="Log">
+        <strong>Log</strong> = <code><span class="t">::</span><span class="t">Log</span>.<span class="k">for</span>(<span class="k">self</span>)</code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Set up a dedicated logger for CGI operations</p>
+      </dd>
+      
+    
+  </dl>
+
+
+
+  
+
+  
+  <h2>
+    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#extract_username_from_auth_header%28env%29-class-method" class="signature"><strong>.extract_username_from_auth_header</strong>(env)</a>
+        
+          <div class="summary"><p>Extracts username from HTTP Authorization header</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#prepare_cgi_env%28env%2Cname%2Cpath_info%29-class-method" class="signature"><strong>.prepare_cgi_env</strong>(env, name, path_info)</a>
+        
+          <div class="summary"><p>Prepares CGI environment variables for git-http-backend</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#run_git_http_backend%28env%2Ccgi_env%29-class-method" class="signature"><strong>.run_git_http_backend</strong>(env, cgi_env)</a>
+        
+          <div class="summary"><p>Runs git-http-backend CGI script</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+  
+
+  
+
+
+  <div class="methods-inherited">
+    
+  </div>
+
+  
+
+  
+  <h2>
+    <a id="class-method-detail" class="anchor" href="#class-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="extract_username_from_auth_header(env)-class-method">
+      <div class="signature">
+        
+        def self.<strong>extract_username_from_auth_header</strong>(env)
+
+        <a class="method-permalink" href="#extract_username_from_auth_header%28env%29-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Extracts username from HTTP Authorization header</p>
+<p>@param env [HTTP::Server::Context] The HTTP context
+@return [String, Nil] The extracted username or nil if not found</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/crit/blob/781e844b6a84a308ae262b97d61f5cb99188df87/src/helpers/cgi_helper.cr#L20" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="prepare_cgi_env(env,name,path_info)-class-method">
+      <div class="signature">
+        
+        def self.<strong>prepare_cgi_env</strong>(env, name, path_info)
+
+        <a class="method-permalink" href="#prepare_cgi_env%28env%2Cname%2Cpath_info%29-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Prepares CGI environment variables for git-http-backend</p>
+<p>@param env [HTTP::Server::Context] The HTTP context
+@param name [String] Repository name
+@param path_info [String] Path info part of the URL
+@return [Hash(String, String)] CGI environment variables</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/crit/blob/781e844b6a84a308ae262b97d61f5cb99188df87/src/helpers/cgi_helper.cr#L45" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="run_git_http_backend(env,cgi_env)-class-method">
+      <div class="signature">
+        
+        def self.<strong>run_git_http_backend</strong>(env, cgi_env)
+
+        <a class="method-permalink" href="#run_git_http_backend%28env%2Ccgi_env%29-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Runs git-http-backend CGI script</p>
+<p>@param env [HTTP::Server::Context] The HTTP context
+@param cgi_env [Hash(String, String)] CGI environment variables
+@return [String] Empty string on success, error message on failure</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/crit/blob/781e844b6a84a308ae262b97d61f5cb99188df87/src/helpers/cgi_helper.cr#L79" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+  
+
+  
+
+
+</div>
+
+</body>
+</html>
