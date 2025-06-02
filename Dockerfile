@@ -14,7 +14,7 @@ COPY . .
 RUN crystal build src/crit.cr --release --no-debug -o crit
 
 # Runtime stage: minimal image for running the app
-FROM alpine:3.21
+FROM alpine:3.22
 
 WORKDIR /app
 
