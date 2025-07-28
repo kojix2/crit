@@ -1,5 +1,5 @@
 # Build stage: compile the Crystal application
-FROM crystallang/crystal:1.16.3-alpine AS builder
+FROM crystallang/crystal:1.17.1-alpine AS builder
 
 WORKDIR /app
 
