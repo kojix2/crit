@@ -192,7 +192,7 @@ module Crit
             end
 
             # Determine if this is a binary file (simple check)
-            is_binary = content.includes?("\0") || content.each_byte.any? { |b| b < 32 && b != 9 && b != 10 && b != 13 }
+            is_binary = content.includes?("\0") || content.each_byte.any? { |byte| byte < 32 && byte != 9 && byte != 10 && byte != 13 }
 
             # Calculate parent directory path
             parent_path = File.dirname(path)

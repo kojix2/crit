@@ -26,10 +26,6 @@ describe Crit::Helpers::CGI do
 
   describe "security: invalid repository names" do
     it "raises ArgumentError for invalid repository name" do
-      env = HTTP::Server::Context.new(
-        HTTP::Request.new("GET", "/repo/../evil.git/info/refs"),
-        HTTP::Server::Response.new(IO::Memory.new)
-      )
       expect_raises(ArgumentError) do
         Crit::Models::Repository.new("../evil")
       end

@@ -37,61 +37,59 @@ module Crit
       # @return [Array<{type: String, mode: String, hash: String, name: String}>] Array of file entries
       # @return [Nil] If the repository or path doesn't exist
       def self.list_files(repo_name : String, ref : String = "master", path : String = "")
-        begin
-          repo_path = repo_git_dir(repo_name)
-          return nil unless repo_path
+        repo_path = repo_git_dir(repo_name)
+        return nil unless repo_path
 
-          # Sanitize inputs to prevent command injection
-          unless valid_ref_or_path?(ref)
-            Log.warn { "Invalid Git reference format: #{ref}" }
-            return nil
-          end
-
-          unless path.empty? || valid_ref_or_path?(path)
-            Log.warn { "Invalid path format: #{path}" }
-            return nil
-          end
-
-          # Construct the git command to list files
-          path_spec = path.empty? ? "" : "#{path}/"
-
-          output = IO::Memory.new
-          error = IO::Memory.new
-
-          status = Process.run(
-            "git",
-            ["--git-dir=#{repo_path}", "ls-tree", "#{ref}:#{path_spec}"],
-            output: output,
-            error: error
-          )
-
-          if !status.success?
-            error.rewind
-            error_message = error.gets_to_end
-            Log.error { "Failed to list files: #{error_message}" }
-            return nil
-          end
-
-          # Parse the output
-          output.rewind
-          entries = [] of {type: String, mode: String, hash: String, name: String}
-
-          output.each_line do |line|
-            # Format: <mode> <type> <hash>\t<name>
-            if line =~ /^(\d+)\s+(\w+)\s+([a-f0-9]+)\t(.+)$/
-              mode = $1
-              type = $2
-              hash = $3
-              name = $4
-              entries << {type: type, mode: mode, hash: hash, name: name}
-            end
-          end
-
-          entries
-        rescue ex
-          Log.error { "Error listing files: #{ex.message}" }
-          nil
+        # Sanitize inputs to prevent command injection
+        unless valid_ref_or_path?(ref)
+          Log.warn { "Invalid Git reference format: #{ref}" }
+          return nil
         end
+
+        unless path.empty? || valid_ref_or_path?(path)
+          Log.warn { "Invalid path format: #{path}" }
+          return nil
+        end
+
+        # Construct the git command to list files
+        path_spec = path.empty? ? "" : "#{path}/"
+
+        output = IO::Memory.new
+        error = IO::Memory.new
+
+        status = Process.run(
+          "git",
+          ["--git-dir=#{repo_path}", "ls-tree", "#{ref}:#{path_spec}"],
+          output: output,
+          error: error
+        )
+
+        if !status.success?
+          error.rewind
+          error_message = error.gets_to_end
+          Log.error { "Failed to list files: #{error_message}" }
+          return nil
+        end
+
+        # Parse the output
+        output.rewind
+        entries = [] of {type: String, mode: String, hash: String, name: String}
+
+        output.each_line do |line|
+          # Format: <mode> <type> <hash>\t<name>
+          if line =~ /^(\d+)\s+(\w+)\s+([a-f0-9]+)\t(.+)$/
+            mode = $1
+            type = $2
+            hash = $3
+            name = $4
+            entries << {type: type, mode: mode, hash: hash, name: name}
+          end
+        end
+
+        entries
+      rescue ex
+        Log.error { "Error listing files: #{ex.message}" }
+        nil
       end
 
       # Gets file content for a specific file in a repository
@@ -102,45 +100,43 @@ module Crit
       # @return [String] The content of the file
       # @return [Nil] If the repository or file doesn't exist
       def self.get_file_content(repo_name : String, ref : String = "master", path : String = "")
-        begin
-          repo_path = repo_git_dir(repo_name)
-          return nil unless repo_path
+        repo_path = repo_git_dir(repo_name)
+        return nil unless repo_path
 
-          # Sanitize inputs to prevent command injection
-          unless valid_ref_or_path?(ref)
-            Log.warn { "Invalid Git reference format: #{ref}" }
-            return nil
-          end
-
-          unless valid_ref_or_path?(path)
-            Log.warn { "Invalid path format: #{path}" }
-            return nil
-          end
-
-          output = IO::Memory.new
-          error = IO::Memory.new
-
-          status = Process.run(
-            "git",
-            ["--git-dir=#{repo_path}", "show", "#{ref}:#{path}"],
-            output: output,
-            error: error
-          )
-
-          if !status.success?
-            error.rewind
-            error_message = error.gets_to_end
-            Log.error { "Failed to get file content: #{error_message}" }
-            return nil
-          end
-
-          # Return the file content
-          output.rewind
-          output.gets_to_end
-        rescue ex
-          Log.error { "Error getting file content: #{ex.message}" }
-          nil
+        # Sanitize inputs to prevent command injection
+        unless valid_ref_or_path?(ref)
+          Log.warn { "Invalid Git reference format: #{ref}" }
+          return nil
         end
+
+        unless valid_ref_or_path?(path)
+          Log.warn { "Invalid path format: #{path}" }
+          return nil
+        end
+
+        output = IO::Memory.new
+        error = IO::Memory.new
+
+        status = Process.run(
+          "git",
+          ["--git-dir=#{repo_path}", "show", "#{ref}:#{path}"],
+          output: output,
+          error: error
+        )
+
+        if !status.success?
+          error.rewind
+          error_message = error.gets_to_end
+          Log.error { "Failed to get file content: #{error_message}" }
+          return nil
+        end
+
+        # Return the file content
+        output.rewind
+        output.gets_to_end
+      rescue ex
+        Log.error { "Error getting file content: #{ex.message}" }
+        nil
       end
 
       # Gets list of branches for a repository
@@ -149,43 +145,41 @@ module Crit
       # @return [Array<String>] Array of branch names
       # @return [Array<String>] Empty array if the repository doesn't exist or has no branches
       def self.list_branches(repo_name : String)
-        begin
-          repo_path = repo_git_dir(repo_name)
-          return [] of String unless repo_path
+        repo_path = repo_git_dir(repo_name)
+        return [] of String unless repo_path
 
-          output = IO::Memory.new
-          error = IO::Memory.new
+        output = IO::Memory.new
+        error = IO::Memory.new
 
-          status = Process.run(
-            "git",
-            ["--git-dir=#{repo_path}", "branch"],
-            output: output,
-            error: error
-          )
+        status = Process.run(
+          "git",
+          ["--git-dir=#{repo_path}", "branch"],
+          output: output,
+          error: error
+        )
 
-          if !status.success?
-            error.rewind
-            error_message = error.gets_to_end
-            Log.error { "Failed to list branches: #{error_message}" }
-            return [] of String
-          end
-
-          # Parse the output
-          output.rewind
-          branches = [] of String
-
-          output.each_line do |line|
-            # Format: [*] <branch_name>
-            if line =~ /^\*?\s+(.+)$/
-              branches << $1.strip
-            end
-          end
-
-          branches
-        rescue ex
-          Log.error { "Error listing branches: #{ex.message}" }
-          [] of String
+        if !status.success?
+          error.rewind
+          error_message = error.gets_to_end
+          Log.error { "Failed to list branches: #{error_message}" }
+          return [] of String
         end
+
+        # Parse the output
+        output.rewind
+        branches = [] of String
+
+        output.each_line do |line|
+          # Format: [*] <branch_name>
+          if line =~ /^\*?\s+(.+)$/
+            branches << $1.strip
+          end
+        end
+
+        branches
+      rescue ex
+        Log.error { "Error listing branches: #{ex.message}" }
+        [] of String
       end
     end
   end

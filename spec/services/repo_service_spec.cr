@@ -50,13 +50,13 @@ describe Crit::Services::RepoService do
       files.should_not be_nil
 
       if files
-        file_names = files.map { |f| f[:name] }
+        file_names = files.map { |file_entry| file_entry[:name] }
         file_names.should contain("README.md")
         file_names.should contain("src")
 
         # Verify the types
-        readme_file = files.find { |f| f[:name] == "README.md" }
-        src_dir = files.find { |f| f[:name] == "src" }
+        readme_file = files.find { |file_entry| file_entry[:name] == "README.md" }
+        src_dir = files.find { |file_entry| file_entry[:name] == "src" }
 
         readme_file.should_not be_nil
         src_dir.should_not be_nil
@@ -73,13 +73,13 @@ describe Crit::Services::RepoService do
       files.should_not be_nil
 
       if files
-        file_names = files.map { |f| f[:name] }
+        file_names = files.map { |file_entry| file_entry[:name] }
         file_names.should contain("README.md")
         file_names.should contain("src")
 
         # Verify the types
-        readme_file = files.find { |f| f[:name] == "README.md" }
-        src_dir = files.find { |f| f[:name] == "src" }
+        readme_file = files.find { |file_entry| file_entry[:name] == "README.md" }
+        src_dir = files.find { |file_entry| file_entry[:name] == "src" }
 
         readme_file.should_not be_nil
         src_dir.should_not be_nil
@@ -96,7 +96,7 @@ describe Crit::Services::RepoService do
       files.should_not be_nil
 
       if files
-        file_names = files.map { |f| f[:name] }
+        file_names = files.map { |file_entry| file_entry[:name] }
         file_names.should contain("main.cr")
       end
     end

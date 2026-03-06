@@ -112,27 +112,23 @@ module Crit
       #
       # @return [Array<String>] Array of repository names
       def self.list
-        begin
-          Dir.entries(Crit::Config::REPO_ROOT)
-            .select { |name| name.ends_with?(".git") }
-            .sort
-        rescue ex
-          Log.error { "Failed to list repositories: #{ex.message}" }
-          [] of String
-        end
+        Dir.entries(Crit::Config::REPO_ROOT)
+          .select(&.ends_with?(".git"))
+          .sort!
+      rescue ex
+        Log.error { "Failed to list repositories: #{ex.message}" }
+        [] of String
       end
 
       # Ensures the repository directory exists
       #
       # @return [Boolean] True if the directory exists or was created successfully
       def self.ensure_repo_dir
-        begin
-          FileUtils.mkdir_p(Crit::Config::REPO_ROOT)
-          true
-        rescue ex
-          Log.error { "Failed to create repository directory: #{ex.message}" }
-          false
-        end
+        FileUtils.mkdir_p(Crit::Config::REPO_ROOT)
+        true
+      rescue ex
+        Log.error { "Failed to create repository directory: #{ex.message}" }
+        false
       end
     end
   end
