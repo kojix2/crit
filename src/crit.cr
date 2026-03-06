@@ -33,7 +33,12 @@ Crit::Helpers::Auth.setup_basic_auth
 
 # Setup routes
 Crit::Routes::Web.setup
-Crit::Routes::Git.setup
+if Crit::Config::GIT_HTTP_ENABLED
+  Crit::Routes::Git.setup
+  Log.info { "Git HTTP transport is enabled" }
+else
+  Log.info { "Git HTTP transport is disabled (SSH mode)" }
+end
 
 # Start the server
 Kemal.run

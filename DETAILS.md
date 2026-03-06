@@ -46,6 +46,7 @@ The application follows a clean architecture pattern with clear separation of co
 - Single-user threat model with minimal in-app security logic
 - Input validation for repository names and Git parameters
 - Security controls delegated to reverse proxy and network boundaries
+- Optional SSH-first mode by disabling Git HTTP routes (`CRIT_GIT_HTTP_ENABLED=false`)
 
 ### Testing
 
@@ -122,6 +123,7 @@ Rather than using a Git library, Crit interacts directly with Git commands for:
 Configuration options are available in `config/config.cr`:
 
 - `REPO_ROOT`: Directory where repositories are stored
+- `GIT_HTTP_ENABLED`: Enable/disable Git Smart HTTP routes
 - `PORT`: HTTP server port (default: 3000)
 
 ## Future Improvements

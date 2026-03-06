@@ -7,5 +7,8 @@ module Crit
 
     # Repository storage
     REPO_ROOT = ENV["CRIT_REPO_ROOT"]? || "./repos"
+
+    # Git HTTP endpoint toggle (set to "false" to disable /repo/* git transport)
+    GIT_HTTP_ENABLED = (ENV["CRIT_GIT_HTTP_ENABLED"]? || "true") != "false"
   end
 end

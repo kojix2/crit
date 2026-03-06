@@ -76,6 +76,7 @@ Recommended minimal stack:
 - Reverse proxy for TLS termination and access control
 - Network restriction (local network, VPN, or allowlist)
 - Strong credentials in environment variables
+- SSH keys for Git transport (preferred for single-user deployments)
 
 - Always run behind HTTPS (TLS termination at a reverse proxy is acceptable).
 - Set strong, unique values for `CRIT_USER` and `CRIT_PASS`.
@@ -83,6 +84,7 @@ Recommended minimal stack:
 - Restrict network access to trusted users (VPN, allowlists, or internal network).
 - Set `LOG_LEVEL=INFO` or stricter in production to reduce sensitive debug logging.
 - Keep Git and container base images up to date.
+- For SSH-first operation, set `CRIT_GIT_HTTP_ENABLED=false` and use `ssh + git-shell` for push/pull.
 
 ## Minimal Security Checklist
 

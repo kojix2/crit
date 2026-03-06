@@ -54,11 +54,28 @@ docker run -d \
 | CRIT_USER       | Admin username               | (required)      |
 | CRIT_PASS       | Admin password               | (required)      |
 | CRIT_REPO_ROOT  | Repository storage directory | /data/git       |
+| CRIT_GIT_HTTP_ENABLED | Enable Git Smart HTTP endpoints | true |
 | PORT            | Server port                  | 3000            |
 | LOG_LEVEL       | Logging level                | INFO            |
 | KEMAL_ENV       | Kemal environment            | development     |
 
 Note: Crit refuses to start if `CRIT_USER`/`CRIT_PASS` are empty or left at insecure defaults.
+
+## SSH-First Mode (Recommended for single-user)
+
+If you want SSH key authentication for `clone/push/pull`, keep Crit for the web UI and disable Git HTTP transport:
+
+```env
+CRIT_GIT_HTTP_ENABLED=false
+```
+
+Then expose repositories via your SSH server (`git-shell`), for example:
+
+```bash
+git clone ssh://git@your-server/data/git/your-repo.git
+```
+
+This keeps application code minimal while moving auth to SSH keys.
 
 ## Local Installation (Alternative)
 
