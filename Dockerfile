@@ -18,8 +18,8 @@ FROM alpine:3.23
 
 WORKDIR /app
 
-# Install required runtime libraries
-RUN apk add --no-cache libssl3 pcre2 libgc++ libgcc git-daemon
+# Install required runtime libraries and Git executable
+RUN apk add --no-cache libssl3 pcre2 libgc++ libgcc git
 
 # Copy the built binary and necessary directories
 COPY --from=builder /app/crit .
