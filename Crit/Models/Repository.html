@@ -206,7 +206,7 @@ while actual Git operations are handled by the service layer.</p>
   </h2>
   
     
-      <a href="https://github.com/kojix2/crit/blob/91b925a4d8aee53dd5345856a3b231797c460d6c/src/models/repository.cr#L20" target="_blank">
+      <a href="https://github.com/kojix2/crit/blob/feb192756a331c627d15f22c5891d46e2eb8ce98/src/models/repository.cr#L20" target="_blank">
         models/repository.cr
       </a>
     
@@ -337,6 +337,13 @@ while actual Git operations are handled by the service layer.</p>
       </li>
     
       <li class="entry-summary">
+        <a href="#delete-instance-method" class="signature"><strong>#delete</strong></a>
+        
+          <div class="summary"><p>Deletes a repository directory</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#exists%3F-instance-method" class="signature"><strong>#exists?</strong></a>
         
           <div class="summary"><p>Checks if the repository exists</p></div>
@@ -354,6 +361,13 @@ while actual Git operations are handled by the service layer.</p>
         <a href="#path-instance-method" class="signature"><strong>#path</strong></a>
         
           <div class="summary"><p>Returns the full path to the repository</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#rename_to%28new_name%3AString%29-instance-method" class="signature"><strong>#rename_to</strong>(new_name : String)</a>
+        
+          <div class="summary"><p>Renames a repository</p></div>
         
       </li>
     
@@ -419,7 +433,7 @@ while actual Git operations are handled by the service layer.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/crit/blob/91b925a4d8aee53dd5345856a3b231797c460d6c/src/models/repository.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/crit/blob/feb192756a331c627d15f22c5891d46e2eb8ce98/src/models/repository.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -453,7 +467,7 @@ while actual Git operations are handled by the service layer.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/crit/blob/91b925a4d8aee53dd5345856a3b231797c460d6c/src/models/repository.cr#L126" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/crit/blob/feb192756a331c627d15f22c5891d46e2eb8ce98/src/models/repository.cr#L158" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -475,7 +489,7 @@ while actual Git operations are handled by the service layer.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/crit/blob/91b925a4d8aee53dd5345856a3b231797c460d6c/src/models/repository.cr#L114" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/crit/blob/feb192756a331c627d15f22c5891d46e2eb8ce98/src/models/repository.cr#L146" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -512,7 +526,29 @@ while actual Git operations are handled by the service layer.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/crit/blob/91b925a4d8aee53dd5345856a3b231797c460d6c/src/models/repository.cr#L89" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/crit/blob/feb192756a331c627d15f22c5891d46e2eb8ce98/src/models/repository.cr#L89" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="delete-instance-method">
+      <div class="signature">
+        
+        def <strong>delete</strong>
+
+        <a class="method-permalink" href="#delete-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Deletes a repository directory</p>
+<p>@return [Boolean] True if deleted successfully, false otherwise</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/crit/blob/feb192756a331c627d15f22c5891d46e2eb8ce98/src/models/repository.cr#L114" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -534,7 +570,7 @@ while actual Git operations are handled by the service layer.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/crit/blob/91b925a4d8aee53dd5345856a3b231797c460d6c/src/models/repository.cr#L81" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/crit/blob/feb192756a331c627d15f22c5891d46e2eb8ce98/src/models/repository.cr#L81" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -555,7 +591,7 @@ while actual Git operations are handled by the service layer.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/crit/blob/91b925a4d8aee53dd5345856a3b231797c460d6c/src/models/repository.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/crit/blob/feb192756a331c627d15f22c5891d46e2eb8ce98/src/models/repository.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -577,7 +613,31 @@ while actual Git operations are handled by the service layer.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/crit/blob/91b925a4d8aee53dd5345856a3b231797c460d6c/src/models/repository.cr#L72" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/crit/blob/feb192756a331c627d15f22c5891d46e2eb8ce98/src/models/repository.cr#L72" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="rename_to(new_name:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>rename_to</strong>(new_name : String)
+
+        <a class="method-permalink" href="#rename_to%28new_name%3AString%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Renames a repository</p>
+<p>@param new_name [String] The new repository name
+@return [Boolean] True if renamed successfully, false otherwise
+@raise [ArgumentError] If the new repository name is invalid</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/crit/blob/feb192756a331c627d15f22c5891d46e2eb8ce98/src/models/repository.cr#L129" target="_blank">View source</a>]
         
       </div>
     </div>
