@@ -51,12 +51,14 @@ docker run -d \
 
 | Variable        | Description                  | Default Value   |
 |-----------------|------------------------------|-----------------|
-| CRIT_USER       | Admin username               | admin           |
-| CRIT_PASS       | Admin password               | yourpassword    |
+| CRIT_USER       | Admin username               | (required)      |
+| CRIT_PASS       | Admin password               | (required)      |
 | CRIT_REPO_ROOT  | Repository storage directory | /data/git       |
 | PORT            | Server port                  | 3000            |
 | LOG_LEVEL       | Logging level                | INFO            |
 | KEMAL_ENV       | Kemal environment            | development     |
+
+Note: Crit refuses to start if `CRIT_USER`/`CRIT_PASS` are empty or left at insecure defaults.
 
 ## Local Installation (Alternative)
 

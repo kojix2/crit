@@ -43,9 +43,9 @@ The application follows a clean architecture pattern with clear separation of co
 
 ### Security
 
-- Input validation to prevent command injection
-- Path traversal protection
-- Error handling with detailed logging
+- Single-user threat model with minimal in-app security logic
+- Input validation for repository names and Git parameters
+- Security controls delegated to reverse proxy and network boundaries
 
 ### Testing
 

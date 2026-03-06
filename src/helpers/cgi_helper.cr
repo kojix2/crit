@@ -79,12 +79,8 @@ module Crit
       def self.run_git_http_backend(env, cgi_env)
         Log.debug { "Running git-http-backend" }
 
-        # Always log CGI environment details at debug level
-        # The log system will filter based on the configured level
-        Log.debug { "CGI environment:" }
-        cgi_env.each do |key, value|
-          Log.debug { "  #{key}=#{value}" }
-        end
+        # Keep debug logs concise and avoid dumping full request-derived env values.
+        Log.debug { "CGI environment prepared" }
 
         io = IO::Memory.new
         status = Process.run(
