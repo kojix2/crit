@@ -108,6 +108,38 @@ module Crit
         status.success?
       end
 
+      # Deletes a repository directory
+      #
+      # @return [Boolean] True if deleted successfully, false otherwise
+      def delete
+        return false unless exists?
+
+        FileUtils.rm_rf(path)
+        !Dir.exists?(path)
+      rescue ex
+        Log.error { "Failed to delete repository: #{ex.message}" }
+        false
+      end
+
+      # Renames a repository
+      #
+      # @param new_name [String] The new repository name
+      # @return [Boolean] True if renamed successfully, false otherwise
+      # @raise [ArgumentError] If the new repository name is invalid
+      def rename_to(new_name : String)
+        return false unless exists?
+
+        new_repo = Repository.new(new_name)
+        return false if new_repo.path == path
+        return false if new_repo.exists?
+
+        FileUtils.mv(path, new_repo.path)
+        true
+      rescue ex
+        Log.error { "Failed to rename repository: #{ex.message}" }
+        false
+      end
+
       # Lists all repositories
       #
       # @return [Array<String>] Array of repository names

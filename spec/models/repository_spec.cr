@@ -135,6 +135,55 @@ describe Crit::Models::Repository do
       list.should eq(["a-repo.git", "b-repo.git", "c-repo.git"])
     end
   end
+
+  # Test repository deletion
+  describe "#delete" do
+    it "deletes an existing repository" do
+      repo = Crit::Models::Repository.new("delete-me")
+      repo.create
+
+      result = repo.delete
+      result.should be_true
+      Dir.exists?(repo.path).should be_false
+    end
+
+    it "returns false when deleting non-existent repository" do
+      repo = Crit::Models::Repository.new("missing")
+      repo.delete.should be_false
+    end
+  end
+
+  # Test repository rename
+  describe "#rename_to" do
+    it "renames an existing repository" do
+      repo = Crit::Models::Repository.new("old-name")
+      repo.create
+
+      result = repo.rename_to("new-name")
+      result.should be_true
+      Dir.exists?(File.join(Crit::Config::REPO_ROOT, "old-name.git")).should be_false
+      Dir.exists?(File.join(Crit::Config::REPO_ROOT, "new-name.git")).should be_true
+    end
+
+    it "returns false when target repository already exists" do
+      source = Crit::Models::Repository.new("source-repo")
+      target = Crit::Models::Repository.new("target-repo")
+      source.create
+      target.create
+
+      source.rename_to("target-repo").should be_false
+      Dir.exists?(source.path).should be_true
+      Dir.exists?(target.path).should be_true
+    end
+
+    it "returns false when renaming to the same name" do
+      repo = Crit::Models::Repository.new("same-name")
+      repo.create
+
+      repo.rename_to("same-name").should be_false
+    end
+  end
+
   # Test repository directory creation
   describe ".ensure_repo_dir" do
     it "creates the repository directory if it doesn't exist" do

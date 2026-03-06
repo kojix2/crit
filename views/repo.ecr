@@ -1,3 +1,29 @@
+<div class="repo-management">
+  <div class="repo-card management-card">
+    <div class="management-section">
+      <h3>Repository Settings</h3>
+      <form action="/repo/<%= name %>/rename" method="post" class="inline-form">
+        <label for="new_name">Rename repository</label>
+        <div class="inline-form-row">
+          <input type="text" id="new_name" name="new_name" placeholder="new-repository-name" required>
+          <button type="submit" class="button">Rename</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="management-section danger-zone">
+      <h3>Danger Zone</h3>
+      <p>Type <code><%= name %></code> to confirm deletion.</p>
+      <form action="/repo/<%= name %>/delete" method="post" class="inline-form">
+        <div class="inline-form-row">
+          <input type="text" name="confirm" placeholder="<%= name %>" required>
+          <button type="submit" class="button danger">Delete Repository</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <% if branches.empty? %>
   <div class="repo-tree">
     <div class="page-header">
@@ -25,3 +51,81 @@
   %>
   <%= render "views/shared/_file_browser.ecr" %>
 <% end %>
+
+<style>
+  .repo-management {
+    margin-bottom: 20px;
+  }
+
+  .management-card {
+    display: block;
+    padding: 20px;
+  }
+
+  .management-section + .management-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .management-section h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+  }
+
+  .management-section p {
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .inline-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .inline-form-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .inline-form-row input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 14px;
+    background-color: var(--surface-color);
+  }
+
+  .inline-form-row input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+
+  .button.danger {
+    border-color: #dc2626;
+    background-color: #dc2626;
+    color: #fff;
+  }
+
+  .button.danger:hover {
+    background-color: #b91c1c;
+    border-color: #b91c1c;
+  }
+
+  .danger-zone {
+    border-color: #fecaca;
+  }
+
+  @media (max-width: 768px) {
+    .inline-form-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>

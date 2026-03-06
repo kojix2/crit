@@ -86,6 +86,74 @@ module Crit
           end
         end
 
+        # Rename repository
+        post "/repo/:name/rename" do |env|
+          begin
+            name = env.params.url["name"]
+            new_name = env.params.body["new_name"]?.to_s.strip
+
+            begin
+              repo = Crit::Models::Repository.new(name)
+            rescue ex : ArgumentError
+              next error_response(ex.message)
+            end
+
+            if !repo.exists?
+              next error_response("Repository not found", "/")
+            end
+
+            begin
+              Crit::Models::Repository.new(new_name)
+            rescue ex : ArgumentError
+              next error_response(ex.message, "/repo/#{name}")
+            end
+
+            if repo.rename_to(new_name)
+              env.response.headers["Location"] = "/repo/#{new_name}"
+              env.response.status_code = 302
+              ""
+            else
+              error_response("Failed to rename repository", "/repo/#{name}")
+            end
+          rescue ex
+            Log.error { "Error renaming repository: #{ex.message}" }
+            error_response("An unexpected error occurred", "/")
+          end
+        end
+
+        # Delete repository
+        post "/repo/:name/delete" do |env|
+          begin
+            name = env.params.url["name"]
+            confirmation = env.params.body["confirm"]?.to_s.strip
+
+            begin
+              repo = Crit::Models::Repository.new(name)
+            rescue ex : ArgumentError
+              next error_response(ex.message)
+            end
+
+            if !repo.exists?
+              next error_response("Repository not found", "/")
+            end
+
+            if confirmation != name
+              next error_response("Confirmation name does not match", "/repo/#{name}")
+            end
+
+            if repo.delete
+              env.response.headers["Location"] = "/"
+              env.response.status_code = 302
+              ""
+            else
+              error_response("Failed to delete repository", "/repo/#{name}")
+            end
+          rescue ex
+            Log.error { "Error deleting repository: #{ex.message}" }
+            error_response("An unexpected error occurred", "/")
+          end
+        end
+
         # Repository details page
         get "/repo/:name" do |env|
           begin
