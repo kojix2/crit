@@ -1,99 +1,91 @@
 # Security Policy
 
-## Security Model
+## Purpose
 
-Crit is designed for a single trusted user and a minimal codebase.
+This document is the security operating guide for maintainers and AI agents working on Crit.
 
-Security strategy:
+Crit is a hobby project maintained by one person, intended for single-user trusted environments. Security work is handled on a best-effort basis.
 
-- Keep application-side security logic small.
-- Delegate as much as possible to proven external tools and infrastructure.
-- Prefer operational controls over in-app complexity.
+## Security Goals
+
+- Prevent auth bypass and unauthorized repository access.
+- Prevent command injection and path traversal.
+- Prevent sensitive data exposure in responses and logs.
+- Keep security logic minimal and auditable.
+
+## Non-Goals
+
+- Multi-user authorization and RBAC.
+- Complex in-app policy engines.
+- Enterprise compliance features.
 
 ## Supported Versions
 
-Security fixes are provided for the latest code on `main`.
+Only the latest `main` branch is supported for security fixes.
 
 | Version | Supported |
 | --- | --- |
 | `main` (latest) | :white_check_mark: |
 | Older commits/releases | :x: |
 
-## Reporting a Vulnerability
+## Trust Boundaries
 
-Please do not report security issues in public GitHub issues.
+- User credentials come from `CRIT_USER` and `CRIT_PASS`.
+- Git operations are high risk because they may execute external binaries and touch filesystem paths.
+- HTTP input is untrusted.
+- Repository content (file names, refs, paths) is untrusted.
 
-Use one of the following private channels:
+## Security-Critical Areas
 
-1. GitHub Security Advisories (preferred):
-   - Go to the repository `Security` tab.
-   - Click `Report a vulnerability`.
-2. If the Security tab is unavailable, open a private contact request through the repository owner profile and include `[SECURITY]` in the subject.
+- `src/helpers/auth.cr`
+- `src/helpers/cgi_helper.cr`
+- `src/routes/git.cr`
+- `src/routes/web.cr`
+- `src/services/repo_service.cr`
+- `src/models/repository.cr`
+- `Dockerfile`
 
-Include as much detail as possible:
+Changes in these files should be treated as security-sensitive and reviewed carefully.
 
-- Affected endpoint(s) or file(s)
-- Reproduction steps / proof of concept
-- Impact assessment
-- Suggested mitigation (optional)
-- Your contact information for follow-up
+## Rules For AI Agents
+
+- Do not weaken authentication checks.
+- Do not add default credentials.
+- Do not introduce shell command construction from raw user input.
+- Do not trust path input; normalize and validate before filesystem access.
+- Do not log credentials, tokens, or secrets.
+- Do not enable insecure fallback behavior by default.
+- Prefer small, isolated patches over broad refactors in security-sensitive code.
+
+## Required Checks Before Merging
+
+For any change touching auth, routing, git execution, path handling, or logging:
+
+1. Confirm authentication still gates protected operations.
+2. Confirm user-controlled paths/refs are validated.
+3. Confirm no new command injection vector is introduced.
+4. Confirm error messages do not leak sensitive internals.
+5. Run tests (`crystal spec`) and ensure they pass.
+
+If tests cannot run, explicitly note that in the PR.
+
+## Deployment Baseline
+
+- Run behind HTTPS (reverse proxy is acceptable).
+- Restrict network exposure (VPN, allowlist, or internal network).
+- Set strong `CRIT_USER` and `CRIT_PASS`.
+- Keep `LOG_LEVEL=INFO` or stricter in production.
+- Keep Git and container base images updated.
+- For SSH-first operation, set `CRIT_GIT_HTTP_ENABLED=false`.
+
+## Reporting A Vulnerability
+
+Do not report vulnerabilities in public issues.
+
+Use GitHub Security Advisories (`Security` tab -> `Report a vulnerability`). If unavailable, contact the repository owner privately with `[SECURITY]` in the subject.
+
+Include affected area, reproduction steps, impact, and contact information.
 
 ## Response Process
 
-- Initial acknowledgment target: within 72 hours
-- Triage and severity assessment target: within 7 days
-- Fix timeline: depends on severity and complexity
-- Coordinated disclosure: preferred after a fix is available
-
-## Scope
-
-In scope:
-
-- Authentication and authorization bypass
-- Command injection / path traversal
-- Cross-site scripting (XSS)
-- CSRF and session-related flaws
-- Data exposure via logs or responses
-
-Out of scope (unless chained with a security impact):
-
-- Purely cosmetic issues
-- Missing best-practice headers without exploitability details
-- Denial of service requiring unrealistic resources
-
-Not planned by design (for this project model):
-
-- Multi-user authorization and RBAC
-- Complex in-app policy engines
-- Large custom security middleware layers
-
-## Secure Deployment Guidance
-
-This project is intended to be deployed behind standard infrastructure controls.
-
-Recommended minimal stack:
-
-- Reverse proxy for TLS termination and access control
-- Network restriction (local network, VPN, or allowlist)
-- Strong credentials in environment variables
-- SSH keys for Git transport (preferred for single-user deployments)
-
-- Always run behind HTTPS (TLS termination at a reverse proxy is acceptable).
-- Set strong, unique values for `CRIT_USER` and `CRIT_PASS`.
-- Do not use default credentials in any non-local environment.
-- Restrict network access to trusted users (VPN, allowlists, or internal network).
-- Set `LOG_LEVEL=INFO` or stricter in production to reduce sensitive debug logging.
-- Keep Git and container base images up to date.
-- For SSH-first operation, set `CRIT_GIT_HTTP_ENABLED=false` and use `ssh + git-shell` for push/pull.
-
-## Minimal Security Checklist
-
-- Change `CRIT_USER` and `CRIT_PASS` before first non-local start.
-- Place Crit behind HTTPS at a reverse proxy.
-- Do not expose the service directly to the public Internet.
-- Keep `LOG_LEVEL` at `INFO` or higher in production.
-- Update base images and Git periodically.
-
-## Disclosure and Credit
-
-We support responsible disclosure. If you would like public credit after a fix is released, mention this in your report.
+Best-effort response only. No guaranteed response or fix timeline. Coordinated disclosure is preferred when a fix is available.
