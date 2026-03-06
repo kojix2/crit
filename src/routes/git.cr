@@ -45,11 +45,14 @@ module Crit
       # @param name [String] Repository name
       # @return [String] The path info part of the URL
       def self.extract_path_info(env, name)
+        escaped_name = Regex.escape(name)
+        request_path = env.request.path
+
         # Extract path_info based on whether the URL contains .git or not
-        if env.request.path.includes?("#{name}.git")
-          env.request.path.not_nil!.sub(%r{^/repo/#{name}.git}, "")
+        if request_path.includes?("#{name}.git")
+          request_path.sub(%r{^/repo/#{escaped_name}\.git}, "")
         else
-          env.request.path.not_nil!.sub(%r{^/repo/#{name}}, "")
+          request_path.sub(%r{^/repo/#{escaped_name}}, "")
         end
       end
     end

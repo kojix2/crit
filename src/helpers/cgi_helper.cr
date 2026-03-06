@@ -22,9 +22,9 @@ module Crit
         return nil unless auth_header
 
         if auth_header.starts_with?("Basic ")
-          base64 = auth_header.sub("Basic ", "")
+          encoded_credentials = auth_header.sub("Basic ", "")
           begin
-            decoded = Base64.decode_string(base64)
+            decoded = Base64.decode_string(encoded_credentials)
             username, _ = decoded.split(":", 2)
             return username
           rescue ex
@@ -45,11 +45,9 @@ module Crit
       def self.prepare_cgi_env(env, name, path_info)
         # Handle repository names with or without .git extension
         repo_name = name.ends_with?(".git") ? name : "#{name}.git"
-        repo_path = File.expand_path(File.join(Crit::Config::REPO_ROOT, repo_name))
 
         Log.debug { "CGI env preparation" }
         Log.debug { "name=#{name}, repo_name=#{repo_name}, path_info=#{path_info}" }
-        Log.debug { "repo_path=#{repo_path}" }
         Log.debug { "request_path=#{env.request.path}" }
         Log.debug { "request_method=#{env.request.method}" }
 
@@ -108,7 +106,7 @@ module Crit
           Log.debug { "git-http-backend header length: #{header.size}" }
           Log.debug { "git-http-backend body length: #{body.size}" }
 
-          header.lines.each do |line|
+          header.each_line do |line|
             Log.debug { "Header line: #{line}" }
             if m = line.match(/^([A-Za-z0-9\-]+):\s*(.+)$/)
               env.response.headers[m[1]] = m[2]

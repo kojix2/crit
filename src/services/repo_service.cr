@@ -16,6 +16,19 @@ module Crit
     # files = Crit::Services::RepoService.list_files("my-project", "master")
     # ```
     class RepoService
+      VALID_REF_OR_PATH_REGEX = /^[a-zA-Z0-9_\-\.\/]+$/
+
+      private def self.repo_git_dir(repo_name : String) : String?
+        normalized_name = repo_name.ends_with?(".git") ? repo_name : "#{repo_name}.git"
+        repo_path = File.join(Crit::Config::REPO_ROOT, normalized_name)
+        return nil unless Dir.exists?(repo_path)
+        repo_path
+      end
+
+      private def self.valid_ref_or_path?(value : String) : Bool
+        value.matches?(VALID_REF_OR_PATH_REGEX)
+      end
+
       # Gets file listing for a repository at a specific path and reference
       #
       # @param repo_name [String] The name of the repository
@@ -25,18 +38,16 @@ module Crit
       # @return [Nil] If the repository or path doesn't exist
       def self.list_files(repo_name : String, ref : String = "master", path : String = "")
         begin
-          # Handle repository names with or without .git extension
-          repo_name = repo_name.ends_with?(".git") ? repo_name : "#{repo_name}.git"
-          repo_path = File.join(Crit::Config::REPO_ROOT, repo_name)
-          return nil unless Dir.exists?(repo_path)
+          repo_path = repo_git_dir(repo_name)
+          return nil unless repo_path
 
           # Sanitize inputs to prevent command injection
-          unless ref.matches?(/^[a-zA-Z0-9_\-\.\/]+$/)
+          unless valid_ref_or_path?(ref)
             Log.warn { "Invalid Git reference format: #{ref}" }
             return nil
           end
 
-          unless path.empty? || path.matches?(/^[a-zA-Z0-9_\-\.\/]+$/)
+          unless path.empty? || valid_ref_or_path?(path)
             Log.warn { "Invalid path format: #{path}" }
             return nil
           end
@@ -92,18 +103,16 @@ module Crit
       # @return [Nil] If the repository or file doesn't exist
       def self.get_file_content(repo_name : String, ref : String = "master", path : String = "")
         begin
-          # Handle repository names with or without .git extension
-          repo_name = repo_name.ends_with?(".git") ? repo_name : "#{repo_name}.git"
-          repo_path = File.join(Crit::Config::REPO_ROOT, repo_name)
-          return nil unless Dir.exists?(repo_path)
+          repo_path = repo_git_dir(repo_name)
+          return nil unless repo_path
 
           # Sanitize inputs to prevent command injection
-          unless ref.matches?(/^[a-zA-Z0-9_\-\.\/]+$/)
+          unless valid_ref_or_path?(ref)
             Log.warn { "Invalid Git reference format: #{ref}" }
             return nil
           end
 
-          unless path.matches?(/^[a-zA-Z0-9_\-\.\/]+$/)
+          unless valid_ref_or_path?(path)
             Log.warn { "Invalid path format: #{path}" }
             return nil
           end
@@ -141,10 +150,8 @@ module Crit
       # @return [Array<String>] Empty array if the repository doesn't exist or has no branches
       def self.list_branches(repo_name : String)
         begin
-          # Handle repository names with or without .git extension
-          repo_name = repo_name.ends_with?(".git") ? repo_name : "#{repo_name}.git"
-          repo_path = File.join(Crit::Config::REPO_ROOT, repo_name)
-          return [] of String unless Dir.exists?(repo_path)
+          repo_path = repo_git_dir(repo_name)
+          return [] of String unless repo_path
 
           output = IO::Memory.new
           error = IO::Memory.new
