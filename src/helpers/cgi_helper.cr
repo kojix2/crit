@@ -81,11 +81,13 @@ module Crit
         Log.debug { "CGI environment prepared" }
 
         io = IO::Memory.new
+        error = IO::Memory.new
         status = Process.run(
           "git",
           ["http-backend"],
           input: (env.request.body || Process::Redirect::Close),
           output: io,
+          error: error,
           env: cgi_env
         )
 
@@ -93,16 +95,31 @@ module Crit
 
         io.rewind
         raw = io.gets_to_end
+        error.rewind
+        stderr_output = error.gets_to_end
         Log.debug { "git-http-backend raw output length: #{raw.size}" }
 
         if raw.empty?
-          Log.error { "git-http-backend returned empty response" }
+          if stderr_output.empty?
+            Log.error { "git-http-backend returned empty response (exit=#{status.exit_code})" }
+          else
+            Log.error { "git-http-backend returned empty response (exit=#{status.exit_code}, stderr=#{stderr_output.strip})" }
+          end
           env.response.status_code = 500
           return "Internal Server Error: git-http-backend returned empty response"
         end
 
         begin
-          header, body = raw.split("\r\n\r\n", 2)
+          parts = raw.split("\r\n\r\n", 2)
+          if parts.size < 2
+            parts = raw.split("\n\n", 2)
+          end
+
+          if parts.size < 2
+            raise "Invalid git-http-backend response format"
+          end
+
+          header, body = parts
           Log.debug { "git-http-backend header length: #{header.size}" }
           Log.debug { "git-http-backend body length: #{body.size}" }
 
